@@ -8,6 +8,10 @@
  
 import json   # This lets us read and write JSON files
 import os     # This lets us check if files exist
+import json
+import os
+from user_manager import add_beta_user, remove_beta_user, list_beta_users, is_beta_user  # ADD THIS LINE
+
  
  
 # ── LOAD FLAGS ──────────────────────────────────────────────
