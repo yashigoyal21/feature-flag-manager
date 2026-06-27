@@ -6,9 +6,9 @@
 # Person 1: Backend Logic
 # ============================================================
  
-import json   # This lets us read and write JSON files
+import json        # This lets us read and write JSON files
+import hashlib  
 import os     # This lets us check if files exist
-
 from user_manager import add_beta_user, remove_beta_user, list_beta_users, is_beta_user  # ADD THIS LINE
 
  
@@ -169,43 +169,89 @@ def delete_flag(name):
     save_flags(data)
     print(f"Flag '{name}' has been deleted.")
    
+   # ── IS FLAG ENABLED ─────────────────────────────────────────
+# The RULES ENGINE — decides if a user should see a flag
+# Returns True (show the feature) or False (hide the feature)
+#
+# Parameters:
+#   flag_name  — which flag to check (e.g. 'new_checkout_flow')
+#   user_id    — which user is asking (e.g. 'user_001')
+import hashlib   # add this at the TOP of main.py with other imports!
+ 
+def is_flag_enabled(flag_name, user_id):
+    data = load_flags()
+ 
+    # Step 1: Find the flag in our list
+    target_flag = None
+    for flag in data['flags']:
+        if flag['name'] == flag_name:
+            target_flag = flag
+            break   # found it — stop looking
+ 
+    # If flag does not exist at all, return False
+    if target_flag is None:
+        print(f"Flag '{flag_name}' does not exist!")
+        return False
+ 
+    # Step 2: If flag is OFF globally, no one sees it
+    if not target_flag['enabled']:
+        return False
+ 
+    # Step 3: Apply the rule
+    rule = target_flag.get('rule', 'Everyone')
+ 
+    # RULE 1: Everyone — all users see it
+    if rule == 'Everyone':
+        return True
+ 
+    # RULE 2: Beta Users Only — check if this user is a beta tester
+    if rule == 'Beta Users Only':
+        beta_users = data.get('beta_users', [])
+        return user_id in beta_users   # True if in list, False if not
+ 
+    # RULE 3: Percentage — use hash to consistently assign user to a group
+    if rule == 'Percentage':
+        percentage = target_flag.get('rollout_percentage', 100)
+        # Convert user_id to a big number using MD5 hash
+        hash_number = int(hashlib.md5(user_id.encode()).hexdigest(), 16)
+        # Get remainder when divided by 100 (gives 0-99)
+        remainder = hash_number % 100
+        # If remainder is less than percentage, user is in the group
+        return remainder < percentage
+ 
+    # If rule is something unknown, default to False (safe)
+    return False
+
     
 # ── MAIN TEST BLOCK ─────────────────────────────────────────
 # Runs only when you execute: python main.py directly
 if __name__ == '__main__':
-    print('=' * 50)
-    print('  FEATURE FLAG MANAGER — Day 2 Test')
-    print('=' * 50)
- 
-    # Show all flags
-    list_flags()
- 
-    # Show all configs
-    list_configs()
- 
-    # Test toggling
+    print('Day 3 — Rules Engine Test')
     print()
-    toggle_flag('dark_mode_beta')     # flip ON
-    toggle_flag('dark_mode_beta')     # flip back OFF
  
-    # Test reading a config
+    # Test 1: Everyone rule
+    print('--- Rule: Everyone ---')
+    print(is_flag_enabled('dark_mode_beta', 'any_user'))      # False (flag is OFF)
+    print(is_flag_enabled('holiday_sale_banner', 'any_user')) # False (flag is OFF)
+ 
+    # Test 2: Beta Users Only rule
     print()
-    print('welcome_message is:', get_config('welcome_message'))
+    print('--- Rule: Beta Users Only ---')
+    print(is_flag_enabled('new_checkout_flow', 'user_001'))   # True (user_001 is beta)
+    print(is_flag_enabled('new_checkout_flow', 'stranger'))   # False (not beta)
  
-    # Test updating a config
-    set_config('welcome_message', 'Welcome to our app!')
-    print('After update:', get_config('welcome_message'))
-    set_config('welcome_message', 'Hello, World!')  # restore original
- 
-    # Test creating and deleting a flag
+    # Test 3: Percentage rule
     print()
-    add_flag('temp_test_flag', rule='Everyone', enabled=True)
-    list_flags()            # should show temp_test_flag at the bottom
-    delete_flag('temp_test_flag')  # clean it up
+    print('--- Rule: Percentage (10%) ---')
+    # Test many users — roughly 10% should return True
+    in_group = 0
+    total = 100
+    for i in range(total):
+        if is_flag_enabled('ai_recommendations', f'user_{i}'):
+            in_group += 1
+    print(f'{in_group} out of {total} users are in the 10% group')
+    print('Expected: roughly 10 users')
  
-    # Final view
-    list_flags()            # should be back to normal
-    list_configs()
- 
+    # Test 4: Non-existent flag
     print()
-    print('All Day 2 tests passed! ✅')
+    print(is_flag_enabled('fake_flag', 'user_001'))  # Should say flag not found
