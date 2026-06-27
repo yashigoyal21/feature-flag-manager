@@ -80,36 +80,85 @@ def remove_beta_user(user_id):
 def is_beta_user(user_id):
     data = _load()
     return user_id in data.get('beta_users', [])
+
+    # ── ADD / UPDATE RULE ───────────────────────────────────────
+# Changes the rule of an existing flag
+# rule options: 'Everyone', 'Beta Users Only', 'Percentage'
+def set_flag_rule(flag_name, rule, rollout_percentage=100):
+    data = _load()
+
+
+    # Validate the rule value
+    valid_rules = ['Everyone', 'Beta Users Only', 'Percentage']
+    if rule not in valid_rules:
+        print(f"ERROR: '{rule}' is not a valid rule.")
+        print(f"Valid options: {valid_rules}")
+        return
+ 
+    # Find the flag and update its rule
+    for flag in data['flags']:
+        if flag['name'] == flag_name:
+            old_rule = flag.get('rule', 'Everyone')
+            flag['rule'] = rule
+            flag['rollout_percentage'] = rollout_percentage
+            _save(data)
+            print(f"Flag '{flag_name}' rule updated:")
+            print(f"  Before: {old_rule}")
+            print(f"  After:  {rule} ({rollout_percentage}%)")
+            return
+ 
+    print(f"ERROR: Flag '{flag_name}' not found!")
+
+     # ── GET FLAG INFO ───────────────────────────────────────────
+# Shows full details of one specific flag
+def get_flag_info(flag_name):
+    data = _load()
+ 
+    for flag in data['flags']:
+        if flag['name'] == flag_name:
+            print()
+            print('=' * 50)
+            print(f"  FLAG: {flag['name']}")
+            print('=' * 50)
+            status = 'ON' if flag['enabled'] else 'OFF'
+            print(f"  Status     : [{status}]")
+            print(f"  Rule       : {flag.get('rule','Everyone')}")
+            print(f"  Rollout    : {flag.get('rollout_percentage',100)}%")
+            print('=' * 50)
+            return flag   # also return it so other code can use it
+ 
+    print(f"Flag '{flag_name}' not found!")
+    return None
  
  
 # ── SELF TEST ────────────────────────────────────────────────
 # This only runs when you execute: python user_manager.py directly
 if __name__ == '__main__':
-    print('Testing User Manager...')
+    print('Testing User Manager — Day 3')
+    print()
  
-    # Show current beta users
+    # Show all beta users
     list_beta_users()
  
-    # Add a new user
+    # Test is_beta_user
     print()
-    add_beta_user('new_tester_99')
-    add_beta_user('user_001')     # already exists — should warn
+    print(is_beta_user('user_001'))      # True
+    print(is_beta_user('nobody'))        # False
  
-    # Show updated list
-    list_beta_users()
- 
-    # Check if someone is a beta user
+    # Test set_flag_rule
     print()
-    result = is_beta_user('user_001')
-    print(f'Is user_001 a beta user? {result}')   # Should print True
+    set_flag_rule('dark_mode_beta', 'Beta Users Only')
+    get_flag_info('dark_mode_beta')
+    set_flag_rule('dark_mode_beta', 'Everyone')   # restore
  
-    result = is_beta_user('random_stranger')
-    print(f'Is random_stranger a beta user? {result}')  # Should print False
- 
-    # Remove the test user we added
+    # Test get_flag_info
     print()
-    remove_beta_user('new_tester_99')
-    list_beta_users()   # should be back to original 5 users
+    get_flag_info('ai_recommendations')
+    get_flag_info('new_checkout_flow')
  
     print()
-    print('All user_manager tests passed!')
+    print('All Day 3 user_manager tests passed! ✅')
+
+
+
+    
