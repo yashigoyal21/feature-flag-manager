@@ -1,10 +1,11 @@
-# This is your first Python file for the Feature Flag Manager project
-# Lines starting with # are COMMENTS — Python ignores them
-# They are notes for humans reading the code
- # ============================================================
-# FEATURE FLAG MANAGER — main.py
-# Person 1: Backend Logic
 # ============================================================
+# FEATURE FLAG MANAGER — main.py
+# Author: Yashasvi Sharma (Person 1)
+# Description: Backend logic — feature flags, config variables,
+#              add/delete flags, and the is_flag_enabled rules engine.
+# Built for GDSC Project Challenge — June 2026
+# ============================================================
+
  
 import json        # This lets us read and write JSON files
 import hashlib  
