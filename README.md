@@ -1,45 +1,100 @@
+
+
+
 # 🚀 Feature Flag & Config Manager
  
-A lightweight terminal-based tool to manage feature flags
-and remote config variables — built for the GDSC project challenge.
+A lightweight terminal-based tool to manage feature flags and remote config
+variables in real-time — without restarting or redeploying the app.
  
-## What This Does
-- Toggle app features ON/OFF without restarting the app
-- Target flags to specific groups: Beta Users, percentage rollout, or Everyone
-- Manage a list of beta testers (add/remove users)
-- Edit config variables (text or number app settings) in real-time
-- Clean terminal interface with keyboard controls (coming Day 4)
-
+Built for the GDSC Project Challenge, June 2026.
+Inspired by production tools like LaunchDarkly and Firebase Remote Config.
  
-## How to Install and Run
+---
  
-### Step 1: Make sure Python is installed
+## ✨ Features
+ 
+- **Toggle flags ON/OFF instantly** from a colourful terminal dashboard
+- **Smart targeting rules:**
+  - `Everyone` — all users see the feature
+  - `Beta Users Only` — only approved testers see it
+  - `Percentage Rollout` — e.g. only 10% of users see it (consistent hashing)
+- **Manage beta testers** — add, remove, and check users
+- **Edit config variables** live — text or number app settings
+- **Keyboard navigation** — arrow keys, spacebar, no mouse needed
+- **Persistent storage** — all changes saved to flags.json automatically
+- **Automated tests** — full test suite to verify all functions
+ 
+---
+ 
+## 🛠️ Installation
+ 
+### 1. Make sure Python 3.11+ is installed
 ```
 python --version
 ```
-You should see Python 3.11 or higher.
  
-### Step 2: Clone this repository
+### 2. Clone this repository
 ```
-git clone https://github.com/YOUR-USERNAME/feature-flag-manager.git
+git clone https://github.com/YOUR_USERNAME/feature-flag-manager.git
 cd feature-flag-manager
 ```
  
-### Step 3: Install dependencies
+### 3. Install dependencies (one command)
 ```
-pip install rich readchar
+pip install -r requirements.txt
 ```
  
-### Step 4: Run the app
+### 4. Run the dashboard
+```
+python ui.py
+```
+ 
+### 5. Or run backend directly
 ```
 python main.py
 ```
  
-## Project Structure
-- `main.py` — Core backend logic (flags, configs, rules engine)
-- `user_manager.py` — Beta user management (add/remove/check users)
-- `ui.py` — Terminal dashboard (added Day 4)
-- `flags.json` — Data storage (6 feature flags, 5 config variables)
-- `test_main.py` — Automated tests (added Day 6)
-
-
+### 6. Run automated tests
+```
+python test_main.py
+```
+ 
+---
+ 
+## ⌨️ Keyboard Controls
+ 
+| Key | Action |
+|-----|--------|
+| ↑ / ↓ | Navigate between flags |
+| Space | Toggle selected flag ON/OFF |
+| E | Edit a config variable |
+| N | Create a new flag |
+| D | Delete selected flag |
+| Q | Quit |
+ 
+---
+ 
+## 📁 Project Structure
+ 
+| File | Description | Owner |
+|------|-------------|-------|
+| `main.py` | Core backend — flags, configs, rules engine | Person 1 |
+| `ui.py` | Terminal dashboard with keyboard controls | Person 1 |
+| `user_manager.py` | Beta user management | Person 2 |
+| `flags.json` | Data store — 6 flags, 5 configs, 5 beta users | Person 2 |
+| `requirements.txt` | Python library dependencies | Person 2 |
+| `test_main.py` | Automated test suite | Both |
+ 
+---
+ 
+## 🏗️ Architecture
+ 
+```
+ui.py  (dashboard)
+  └── imports ──▶  main.py  (backend logic)
+                     └── reads/writes ──▶  flags.json  (data)
+                     └── imports ──▶  user_manager.py  (beta users)
+```
+ 
+---
+ 
