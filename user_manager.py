@@ -1,8 +1,11 @@
 # ============================================================
 # USER MANAGER — user_manager.py
-# Person 2: Beta User Management
-# Handles adding, removing, and listing beta users
+# Author: Yashi
+# Description: Manages the beta users list.
+#              Functions to add, remove, check, and list users.
+#              Also includes set_flag_rule and get_flag_info.
 # ============================================================
+
  
 import json
  
