@@ -21,7 +21,7 @@
     },
     {
       "name": "ai_recommendations",
-      "enabled": true,
+      "enabled": false,
       "rule": "Percentage",
       "rollout_percentage": 10
     },
@@ -45,7 +45,7 @@
     }
   ],
   "configs": {
-    "welcome_message": "Hello, World!",
+    "welcome_message": "",
     "max_login_attempts": 5,
     "app_version": "1.0.0",
     "support_email": "support@myapp.com",
