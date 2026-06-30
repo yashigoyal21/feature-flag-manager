@@ -100,23 +100,29 @@ python ui.py
 | N | Create a new flag |
 | D | Delete selected flag |
 | Q | Quit |
-
-### 5. Run the Flutter app (separate VS Code window / terminal)
-```bash
-cd flag_client
-flutter pub get
-flutter run -d chrome
-```
-A Chrome window opens showing the live dashboard. The status bar at the top shows green "Connected" when it's successfully talking to `server.py`.
-
-### 6. Test it
-Toggle a flag in `ui.py` (or directly via the API) — within ~2 seconds the change appears in the Flutter app too, and vice versa.
-
+ 
 ---
-
-## 🧪 Running Tests
-```bash
-python test_main.py
+ 
+## 📁 Project Structure
+ 
+| File | Description | Owner |
+|------|-------------|-------|
+| `main.py` | Core backend — flags, configs, rules engine | Person 1 |
+| `ui.py` | Terminal dashboard with keyboard controls | Person 1 |
+| `user_manager.py` | Beta user management | Person 2 |
+| `flags.json` | Data store — 6 flags, 5 configs, 5 beta users | Person 2 |
+| `requirements.txt` | Python library dependencies | Person 2 |
+| `test_main.py` | Automated test suite | Both |
+ 
+---
+ 
+## 🏗️ Architecture
+ 
+```
+ui.py  (dashboard)
+  └── imports ──▶  main.py  (backend logic)
+                     └── reads/writes ──▶  flags.json  (data)
+                     └── imports ──▶  user_manager.py  (beta users)
 ```
 
 ---
