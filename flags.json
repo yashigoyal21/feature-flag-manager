@@ -4,15 +4,27 @@
     "user_admin",
     "tester_42",
     "dev_yashasvi",
-    "beta_yashi"
+    "beta_priya"
   ],
  
   "flags": [
     {
-      "name": "new_dashboard",
+      "name": "new_checkout_flow",
       "enabled": false,
       "rule": "Beta Users Only",
       "rollout_percentage": 100
+    },
+    {
+      "name": "dark_mode_beta",
+      "enabled": false,
+      "rule": "Everyone",
+      "rollout_percentage": 100
+    },
+    {
+      "name": "ai_recommendations",
+      "enabled": true,
+      "rule": "Percentage",
+      "rollout_percentage": 10
     },
     {
       "name": "holiday_sale_banner",
@@ -22,20 +34,14 @@
     },
     {
       "name": "ai_chat_assistant",
-      "enabled": false,
+      "enabled": true,
       "rule": "Percentage",
       "rollout_percentage": 25
-    },
-    {
-      "name": "-u \"c:\\Users\\Yashasvi Sharma\\OneDrive\\Desktop\\flag-feature-manager\\server.py\"",
-      "enabled": false,
-      "rule": "python -u \"c:\\Users\\Yashasvi Sharma\\OneDrive\\Desktop\\flag-feature-manager\\server.py\"",
-      "rollout_percentage": 100
     }
   ],
  
   "configs": {
-    "welcome_message": "",
+    "welcome_message": "Hello, World!",
     "max_login_attempts": 5,
     "app_version": "1.0.0",
     "support_email": "support@myapp.com",
